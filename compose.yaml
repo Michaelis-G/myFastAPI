@@ -1,0 +1,31 @@
+services:
+  database:
+    image: docker.io/postgres:18-alpine
+    container_name: database
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_DB: fastapi
+    networks:
+      - database
+  adminer:
+    image: docker.io/adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    network:
+      - database
+
+volumes:
+  postgresql_data:
+    driver: local
+networks:
+  database:
+    driver: bridge
+
