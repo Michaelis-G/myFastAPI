@@ -4,10 +4,12 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+from Entity import User, Base
+
 app = FastAPI()
 engine = create_engine(
-    'postgresql://admin:password@localhost:5432/fastapi',
-    echo= True
+    "postgresql://admin:password@localhost:5432/fastapi",
+    echo= False
 )
 
 class Item(BaseModel):
@@ -31,8 +33,12 @@ def read_item(item_id: int, q: str | None = None):
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
-if (__name__ == '__main__'):
+if (__name__ == "__main__"):
+    Base.metadata.create_all(engine)
+
     with Session(engine) as session:
-
-
+        mika = User.User(name = 'michaelis')
+        bob = User.User(name = 'bob')
+        # session.add_all([mika, bob])
+        User.select_users(session)
         session.commit()
