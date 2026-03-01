@@ -1,4 +1,13 @@
 services:
+  fastapi:
+    build: .
+    ports: ["8888:80"]
+    networks:
+      - database
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: "postgresql://admin:password@database:5432/fastapi"
   database:
     image: docker.io/postgres:18-alpine
     container_name: database
